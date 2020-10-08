@@ -1,5 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const sharp = require('sharp');
+
+const multer = require('multer');
 
 const auth = require('../../middleware/auth');
 
@@ -9,6 +12,9 @@ const { check, validationResult } = require('express-validator');
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
 const Pet = require('../../models/Pet');
+
+
+
 
 //@route POST api/pets
 //@desc Create a pet
@@ -68,7 +74,7 @@ router.post(
 
 router.get('/', async (req, res) => {
 	try {
-		const pets = await Pet.find().sort({ date: -1 });
+		const pets = await Pet.find().sort({ date: -1 }).select('-image');
 		res.json(pets);
 	} catch (err) {
 		console.error(err.message);
@@ -82,7 +88,7 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
 	try {
-		const pet = await Pet.findById(req.params.id);
+		const pet = await Pet.findById(req.params.id).select('-image');
 		if (!pet) {
 			return res.status(404).json({ msg: 'Pet not found' });
 		}
@@ -90,6 +96,111 @@ router.get('/:id', async (req, res) => {
 	} catch (err) {
 		console.error(err.message);
 		if (error.kind === 'ObjectId') {
+			return res.status(404).json({ msg: 'Pet not found' });
+		}
+		res.status(500).send('Server Error');
+	}
+});
+
+//@route POST api/pets/:id/picture
+//@desc Create a pet avatar
+//@access Private
+const upload = multer({
+	limits: {
+		fileSize: 200000
+	},
+	fileFilter(req, file, cb) {
+		if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+			return cb(new Error('File must have .jpg or .png format'));
+		}
+		cb(undefined, true);
+	}
+});
+
+router.post(
+	'/:id/picture',
+	auth,
+	upload.single('image'),
+	async (req, res) => {
+        const buffer = await sharp(req.file.buffer).resize({width: 250, height: 250}).png().toBuffer()
+		try {
+			const pet = await Pet.findById(req.params.id);
+
+			if (!pet) {
+				return res.status(404).json({ msg: 'Pet not found' });
+			}
+
+			//Check on a user
+			if (pet.user.toString() !== req.user.id) {
+				return res.status(401).json({ msg: 'User not authorized' });
+			}
+			//Update
+
+			pet.image = buffer;
+			await pet.save();
+			return res.json(pet);
+		} catch (err) {
+			console.error(err.message);
+			if (err.kind === 'ObjectId') {
+				return res.status(404).json({ msg: 'Pet not found' });
+			}
+			res.status(500).send('Server Error');
+		}
+	},
+	(error, req, res, next) => {
+		res.status(400).send({ msg: error.message });
+	}
+);
+
+//@route Delete api/pets/:id/picture
+//@desc Delete a pet avatar
+//@access Private
+router.delete('/:id/picture', auth, async (req, res) => {
+	try {
+		const pet = await Pet.findById(req.params.id);
+
+		if (!pet) {
+			return res.status(404).json({ msg: 'Pet not found' });
+		}
+
+		//Check on a user
+		if (pet.user.toString() !== req.user.id) {
+			return res.status(401).json({ msg: 'User not authorized' });
+		}
+		//Update
+
+		pet.image = undefined;
+		await pet.save();
+		return res.json(pet);
+	} catch (err) {
+		console.error(err.message);
+		if (err.kind === 'ObjectId') {
+			return res.status(404).json({ msg: 'Pet not found' });
+		}
+		res.status(500).send('Server Error');
+	}
+});
+//@route GET api/pets/:id
+//@desc get a pet avatar
+//@access Public
+
+router.get('/:id/picture', async (req, res) => {
+	try {
+		const pet = await Pet.findById(req.params.id);
+
+		if (!pet) {
+			return res.status(404).json({ msg: 'Pet not found' });
+		}
+		if (!pet.image) {
+			return res.status(404).json({ msg: 'Image not found' });
+		}
+
+		res.set('Content-Type', 'image/png');
+
+		res.send(pet.image);
+	} catch (err) {
+		console.error(err.message);
+		if (err.kind === 'ObjectId') {
 			return res.status(404).json({ msg: 'Pet not found' });
 		}
 		res.status(500).send('Server Error');
@@ -110,7 +221,7 @@ router.patch('/:id', auth, async (req, res) => {
 	}
 
 	try {
-		const pet = await Pet.findById(req.params.id);
+		const pet = await Pet.findById(req.params.id).select('-image');
 
 		if (!pet) {
 			return res.status(404).json({ msg: 'Pet not found' });
@@ -168,7 +279,7 @@ router.delete('/:id', auth, async (req, res) => {
 
 router.put('/like/:id', auth, async (req, res) => {
 	try {
-		const pet = await Pet.findById(req.params.id);
+		const pet = await Pet.findById(req.params.id).select('-image');
 		//Check if the pet already been liked by this user
 		if (
 			pet.likes.filter((like) => {
@@ -194,7 +305,7 @@ router.put('/like/:id', auth, async (req, res) => {
 
 router.put('/unlike/:id', auth, async (req, res) => {
 	try {
-		const pet = await Pet.findById(req.params.id);
+		const pet = await Pet.findById(req.params.id).select('-image');
 		//Check if the pet already been liked by this user
 		if (
 			pet.likes.filter((like) => {
@@ -233,7 +344,7 @@ router.post(
 		try {
 			const user = await User.findById(req.user.id).select('-password');
 
-			const pet = await Pet.findById(req.params.id);
+			const pet = await Pet.findById(req.params.id).select('-image');
 
 			const newComment = {
 				text: req.body.text,
@@ -267,7 +378,7 @@ router.patch(
 			res.status(400).json({ errors: errors.array() });
 		}
 		try {
-			const pet = await Pet.findById(req.params.id);
+			const pet = await Pet.findById(req.params.id).select('-image');
 
 			//Pull out comment
 			const comment = pet.comments.find((comment) => comment.id === req.params.comment_id);
@@ -300,7 +411,7 @@ router.patch(
 
 router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
 	try {
-		const pet = await Pet.findById(req.params.id);
+		const pet = await Pet.findById(req.params.id).select('-image');
 
 		//Pull out comment
 		const comment = pet.comments.find((comment) => comment.id === req.params.comment_id);
