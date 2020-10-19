@@ -32,7 +32,7 @@ const Login = ({login, isAuthenticated}) => {
 
 						<form onSubmit={(e) => onSubmit(e)}>
 							<div className='form-group'>
-								<label for='exampleInputEmail1'>Email address</label>
+								<label htmlFor='exampleInputEmail1'>Email address</label>
 								<input
 									className='form-control'
 									id='exampleInputEmail1'
@@ -45,7 +45,7 @@ const Login = ({login, isAuthenticated}) => {
 								/>
 							</div>
 							<div className='form-group'>
-								<label for='inputPassword'>Password</label>
+								<label htmlFor='inputPassword'>Password</label>
 								<input
 									className='form-control'
 									id='inputPassword'

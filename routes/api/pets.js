@@ -13,9 +13,6 @@ const Profile = require('../../models/Profile');
 const User = require('../../models/User');
 const Pet = require('../../models/Pet');
 
-
-
-
 //@route POST api/pets
 //@desc Create a pet
 //@access Private
@@ -25,7 +22,7 @@ router.post(
 	[
 		auth,
 		check('name', 'Name is required').not().isEmpty(),
-		check('gender', 'Gender is required').not().isEmpty(),
+
 		check('type', 'Type is required').not().isEmpty()
 	],
 	async (req, res) => {
@@ -68,11 +65,11 @@ router.post(
 	}
 );
 
-//@route GET api/posts
-//@desc Get all posts
+//@route GET api/pets
+//@desc Get all pets
 //@access Public
 
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
 	try {
 		const pets = await Pet.find().sort({ date: -1 }).select('-image');
 		res.json(pets);
@@ -82,8 +79,55 @@ router.get('/', async (req, res) => {
 	}
 });
 
+//@route GET api/pets/me
+//@desc Get current users pets profiles
+//@access Private
+
+router.get('/me', auth, async (req, res) => {
+	try {
+		const myPets = await Pet.find({ user: req.user.id }).sort({ date: -1 }).select('-image');
+		if (myPets.length === 0) {
+			return res.status(400).json({ msg: 'There is no pets for this user' });
+		}
+		res.json(myPets);
+	} catch (err) {
+		console.error(err.message);
+		res.status(500).send('Server Error');
+	}
+});
+
+//@route DELETE api/pets/:id
+//@desc Delete a pet
+//@access Private
+
+router.delete('/:id', auth, async (req, res) => {
+	try {
+		const pet = await Pet.findById(req.params.id);
+
+		if (!pet) {
+			return res.status(404).json({ msg: 'Pet not found' });
+		}
+
+		//Check on a user
+		if (pet.user.toString() !== req.user.id) {
+			return res.status(401).json({ msg: 'User not authorized' });
+		}
+		await pet.remove();
+
+		const myPets = await Pet.find({ user: req.user.id }).sort({ date: -1 }).select('-image');
+
+		res.json(myPets);
+	} catch (err) {
+		console.error(err.message);
+		if (err.kind === 'ObjectId') {
+			return res.status(404).json({ msg: 'Pet not found' });
+		}
+		res.status(500).send('Server Error');
+	}
+});
+
 //@route GET api/pets/:id
-//@desc Get pets by id
+//@desc Get pets by pet id
 //@access Public
 
 router.get('/:id', async (req, res) => {
@@ -122,7 +166,10 @@ router.post(
 	auth,
 	upload.single('image'),
 	async (req, res) => {
-        const buffer = await sharp(req.file.buffer).resize({width: 250, height: 250}).png().toBuffer()
+		const buffer = await sharp(req.file.buffer)
+			.resize({ width: 250, height: 250 })
+			.png()
+			.toBuffer();
 		try {
 			const pet = await Pet.findById(req.params.id);
 
@@ -140,7 +187,6 @@ router.post(
 			await pet.save();
 			return res.json(pet);
 		} catch (err) {
-			console.error(err.message);
 			if (err.kind === 'ObjectId') {
 				return res.status(404).json({ msg: 'Pet not found' });
 			}
@@ -180,7 +226,7 @@ router.delete('/:id/picture', auth, async (req, res) => {
 		res.status(500).send('Server Error');
 	}
 });
-//@route GET api/pets/:id
+//@route GET api/pets/:id/picture
 //@desc get a pet avatar
 //@access Public
 
@@ -199,7 +245,6 @@ router.get('/:id/picture', async (req, res) => {
 
 		res.send(pet.image);
 	} catch (err) {
-		console.error(err.message);
 		if (err.kind === 'ObjectId') {
 			return res.status(404).json({ msg: 'Pet not found' });
 		}
@@ -245,33 +290,7 @@ router.patch('/:id', auth, async (req, res) => {
 	}
 });
 
-//@route DELETE api/pets/:id
-//@desc Delete a pet
-//@access Private
-
-router.delete('/:id', auth, async (req, res) => {
-	try {
-		const pet = await Pet.findById(req.params.id);
-
-		if (!pet) {
-			return res.status(404).json({ msg: 'Pet not found' });
-		}
-
-		//Check on a user
-		if (pet.user.toString() !== req.user.id) {
-			return res.status(401).json({ msg: 'User not authorized' });
-		}
-		await pet.remove();
-
-		res.json({ msg: 'Pet removed' });
-	} catch (err) {
-		console.error(err.message);
-		if (err.kind === 'ObjectId') {
-			return res.status(404).json({ msg: 'Pet not found' });
-		}
-		res.status(500).send('Server Error');
-	}
-});
+//++++++++++++++++++++LIKES AND COMMENTS++++++++++++++++++++++++
 
 //@route PUT api/pets/like/:id
 //@desc Like Pet

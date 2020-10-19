@@ -38,7 +38,7 @@ const Register = ({setAlert, register, isAuthenticated}) => {
 
 						<form onSubmit={(e) => onSubmit(e)}>
 							<div className='form-group'>
-								<label for='userName'>User Name</label>
+								<label htmlFor='userName'>User Name</label>
 								<input
 									className='form-control'
 									id='userName'
@@ -51,7 +51,7 @@ const Register = ({setAlert, register, isAuthenticated}) => {
 								/>
 							</div>
 							<div className='form-group'>
-								<label for='InputEmail'>Email address</label>
+								<label htmlFor='InputEmail'>Email address</label>
 								<input
 									className='form-control'
 									id='InputEmail'
@@ -67,7 +67,7 @@ const Register = ({setAlert, register, isAuthenticated}) => {
 								</small>
 							</div>
 							<div className='form-group'>
-								<label for='inputPassword1'>Password</label>
+								<label htmlFor='inputPassword1'>Password</label>
 								<input
 									className='form-control'
 									id='inputPassword1'
@@ -80,7 +80,7 @@ const Register = ({setAlert, register, isAuthenticated}) => {
 								/>
 							</div>
 							<div className='form-group'>
-								<label for='inputPassword2'>Confirm Password</label>
+								<label htmlFor='inputPassword2'>Confirm Password</label>
 								<input
 									className='form-control'
 									id='inputPassword2'

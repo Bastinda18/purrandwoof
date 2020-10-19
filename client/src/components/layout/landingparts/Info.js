@@ -34,7 +34,7 @@ const Info = () => {
                 <p className="lead">Lorem ipsum dolor sit. Cupiditate distinctio eaque alias officiis in ab tempore quam provident dignissimos.</p>
             </div>
         </div>
-        <a href="#" className="btn btn-lg btn-danger text-white px-4 mt-5">See All Pets</a>
+        <Link to="/pets" className="btn btn-lg btn-danger text-white px-4 mt-5">See All Pets</Link>
         <div id="quote" className="row p-4 my-4">
             <div className="col-md-4 d-none d-md-block">
                 <img className="img-fluid" src={men} alt="a men and a dog" width="440px"/>

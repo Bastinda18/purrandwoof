@@ -13,4 +13,8 @@ export const GET_PROFILES = 'GET_PROFILES';
 export const UPDATE_PROFILE = 'UPDATE_PROFILE';
 export const ACCOUNT_DELETED = 'ACCOUNT_DELETED';
 export const PROFILE_ERROR = 'PROFILE_ERROR';
-
+export const GET_PET = 'GET_PET';
+export const GET_ALL_PETS = 'GET_ALL_PETS';
+export const GET_MY_PET = 'GET_MY_PET';
+export const UPDATE_PET_LIST = 'UPDATE_PET_LIST';
+export const PET_PROFILE_ERROR = 'PET_PROFILE_ERROR';

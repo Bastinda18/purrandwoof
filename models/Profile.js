@@ -9,11 +9,20 @@ const ProfileSchema = new mongoose.Schema({
         type: String,
         require: true
     },
-    status: {
-        type: [String]
+    finder: {
+        type: Boolean
+    },
+    adopter: {
+        type: Boolean
+    },
+    company: {
+        type: Boolean
     },
     social: {
         facebook:{
+            type: String
+        },
+        twitter:{
             type: String
         },
         instagram: {
@@ -23,5 +32,7 @@ const ProfileSchema = new mongoose.Schema({
 
 
 });
+
+mongoose.Schema.Types.Boolean.convertToFalse.add('');
 
 module.exports = Profile = mongoose.model('profile', ProfileSchema);

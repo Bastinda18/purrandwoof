@@ -41,7 +41,7 @@ router.post(
 		if (!errors.isEmpty()) {
 			return res.status(400).json({ errors: errors.array() });
 		}
-		const { location, status, facebook, instagram } = req.body;
+		const { location, finder, adopter, company, facebook, twitter, instagram } = req.body;
 
 		//Build profile object
 
@@ -49,12 +49,16 @@ router.post(
 
 		profileFields.user = req.user.id;
 		if (location) profileFields.location = location;
-		if (status) profileFields.status = status.split(',').map((skill) => skill.trim());
+
+		profileFields.finder = finder;
+		profileFields.adopter = adopter;
+		profileFields.company = company;
 
 		//Build social object
 		profileFields.social = {};
 
 		if (facebook) profileFields.social.facebook = facebook;
+		if (twitter) profileFields.social.twitter = twitter;
 		if (instagram) profileFields.social.instagram = instagram;
 
 		try {
@@ -122,7 +126,7 @@ router.get('/user/:user_id', async (req, res) => {
 
 router.delete('/', auth, async (req, res) => {
 	try {
-		//Remove user post
+		//Remove user pets
 		await Pet.deleteMany({ user: req.user.id });
 		//Remove profile
 		await Profile.findOneAndRemove({ user: req.user.id });
