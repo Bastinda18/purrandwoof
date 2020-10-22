@@ -18,3 +18,7 @@ export const GET_ALL_PETS = 'GET_ALL_PETS';
 export const GET_MY_PET = 'GET_MY_PET';
 export const UPDATE_PET_LIST = 'UPDATE_PET_LIST';
 export const PET_PROFILE_ERROR = 'PET_PROFILE_ERROR';
+export const UPDATE_LIKES = 'UPDATE_LIKES';
+export const CLEAR_MY_PETS = 'CLEAR_MY_PETS';
+export const ADD_COMMENT = 'ADD_COMMENT';
+export const REMOVE_COMMENT = 'REMOVE_COMMENT';

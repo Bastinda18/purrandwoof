@@ -151,7 +151,7 @@ router.get('/:id', async (req, res) => {
 //@access Private
 const upload = multer({
 	limits: {
-		fileSize: 200000
+		fileSize: 150000
 	},
 	fileFilter(req, file, cb) {
 		if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {

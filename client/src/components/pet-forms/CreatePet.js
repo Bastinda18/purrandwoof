@@ -68,6 +68,7 @@ function CreatePet({ createPet, history }) {
 										name='type'
 										value={type}
 										onChange={(e) => onChange(e)}
+										required
 									/>
 								</div>
 								<div className='col-sm'>
@@ -130,6 +131,13 @@ function CreatePet({ createPet, history }) {
 									onChange={(e) => onChange(e)}
 								/>
 							</div>
+							<p>
+								<small className='text-info'>
+									{' '}
+									Add a picture of your pet. File must be JPG or PNG format and no
+									more than 150Kb.{' '}
+								</small>
+							</p>
 							<div className='custom-file'>
 								<input
 									type='file'

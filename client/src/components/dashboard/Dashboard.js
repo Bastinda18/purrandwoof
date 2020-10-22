@@ -15,15 +15,20 @@ const Dashboard = ({
 	auth: { user, avatar },
 	profile: { profile, loading }
 }) => {
-	useEffect(() => {
-		getCurrentProfile();
-	}, []);
-	useEffect(() => {
-		getUsersPet();
-	}, []);
+	useEffect(
+		() => {
+			getCurrentProfile();
+		},
+		[ getCurrentProfile ]
+	);
+	useEffect(
+		() => {
+			getUsersPet();
+		},
+		[ getUsersPet ]
+	);
 
-	console.log(myPets);
-	return loading && profile === null ? (
+	return (loading && profile === null) || user === null ? (
 		<Spinner />
 	) : (
 		<section id='profiles'>
@@ -65,7 +70,13 @@ const Dashboard = ({
 							''
 						)}
 
-						<MyPets pets={myPets} />
+						{myPets.length > 0 ? (
+							<MyPets pets={myPets} />
+						) : (
+							<p className='lead text-info my-3'>
+								Find a pet? Make an account for it by pressing "Add a pet" button.
+							</p>
+						)}
 						<button
 							onClick={() => deleteAccount()}
 							className='btn btn-info text-white mt-1  mb-4 px-2 '
@@ -84,7 +95,8 @@ Dashboard.propTypes = {
 	deleteAccount: PropTypes.func.isRequired,
 	getUsersPet: PropTypes.func.isRequired,
 	auth: PropTypes.object.isRequired,
-	profile: PropTypes.object.isRequired
+	profile: PropTypes.object.isRequired,
+	myPets: PropTypes.array.isRequired
 };
 const mapStateToProps = (state) => ({
 	auth: state.auth,

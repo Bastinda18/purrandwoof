@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Logo } from '../layout/Logo';
+
 import PropTypes from 'prop-types';
 import avatar from '../../images/avatar.png';
 
-const Image = ({ id, name, width = '150px' }) => {
+const Image = ({ id, name, width = '150px', myclass = '' }) => {
 	const [ error, setError ] = useState(false);
-	let src = `api/pets/${id}/picture`;
+	let src = `/api/pets/${id}/picture`;
 
 	if (error) {
 		src = avatar;
@@ -15,7 +15,7 @@ const Image = ({ id, name, width = '150px' }) => {
 		<img
 			src={src}
 			onError={() => setError(true)}
-			className='card-img-top'
+			className={myclass}
 			alt={name}
 			width={width}
 		/>

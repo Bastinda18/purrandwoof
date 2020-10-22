@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { setAlert } from './alert';
-import { GET_PROFILE, PROFILE_ERROR, ACCOUNT_DELETED, CLEAR_PROFILE } from './types';
+import { GET_PROFILE, PROFILE_ERROR, ACCOUNT_DELETED, CLEAR_PROFILE, CLEAR_MY_PETS } from './types';
 
 //GET CURRENT USERS PROFILE
 
@@ -59,6 +59,7 @@ export const deleteAccount = () => async (dispatch) => {
 	if (window.confirm('Are you sure? This can Not be undone!')) {
 		try {
 			const res = await axios.delete('/api/profile');
+			dispatch({ type: CLEAR_MY_PETS });
 			dispatch({
 				type: CLEAR_PROFILE
 			});
@@ -72,5 +73,23 @@ export const deleteAccount = () => async (dispatch) => {
 				payload: { msg: err.response.statusText, status: err.response.status }
 			});
 		}
+	}
+};
+
+//GET USER PROFILE BY ID
+
+export const getUsersProfileById = (userId) => async (dispatch) => {
+	try {
+		const res = await axios.get(`/api/profile/user/${userId}`);
+
+		dispatch({
+			type: GET_PROFILE,
+			payload: res.data
+		});
+	} catch (err) {
+		dispatch({
+			type: PROFILE_ERROR,
+			payload: { msg: err.response.statusText, status: err.response.status }
+		});
 	}
 };

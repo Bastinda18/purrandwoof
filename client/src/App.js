@@ -10,6 +10,8 @@ import CreateProfile from './components/profile-form/CreateProfile';
 import EditProfile from './components/profile-form/EditProfile';
 import CreatePet from './components/pet-forms/CreatePet';
 import Pets from './components/pets/Pets';
+import PetProfile from './components/pets/PetProfile';
+import PetDiscussion from './components/pets/PetDiscussion';
 import PrivateRoute from './components/routing/PrivateRoute';
 import store from './store';
 import { loadUser } from './actions/auth';
@@ -39,6 +41,8 @@ const App = () => {
 					<PrivateRoute exact path='/edit-profile' component={EditProfile} />
 					<PrivateRoute exact path='/create-pet' component={CreatePet} />
 					<PrivateRoute exact path='/all-pets' component={Pets} />
+					<PrivateRoute exact path='/pet/:id' component={PetProfile} />
+					<PrivateRoute exact path='/pet/discussion/:id' component={PetDiscussion} />
 				</Switch>
 			</Fragment>
 		</Router>

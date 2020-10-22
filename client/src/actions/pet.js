@@ -1,6 +1,16 @@
 import axios from 'axios';
 import { setAlert } from './alert';
-import { GET_PET, PET_PROFILE_ERROR, GET_MY_PET, UPDATE_PET_LIST, GET_ALL_PETS } from './types';
+import { getUsersProfileById } from './profile';
+import {
+	GET_PET,
+	PET_PROFILE_ERROR,
+	GET_MY_PET,
+	UPDATE_PET_LIST,
+	GET_ALL_PETS,
+	UPDATE_LIKES,
+	ADD_COMMENT,
+	REMOVE_COMMENT
+} from './types';
 
 //Get All Pets
 
@@ -23,7 +33,7 @@ export const getAllPets = () => async (dispatch) => {
 
 export const createPet = (formData, history, edit = false) => async (dispatch) => {
 	//if No Picture
-	if (!formData.image) {
+	if (formData.image === null) {
 		try {
 			const config = {
 				headers: {
@@ -40,7 +50,6 @@ export const createPet = (formData, history, edit = false) => async (dispatch) =
 			if (!edit) {
 				history.push('/dashboard');
 			}
-			return;
 		} catch (err) {
 			const errors = err.response.data.errors;
 
@@ -52,10 +61,11 @@ export const createPet = (formData, history, edit = false) => async (dispatch) =
 				payload: { msg: err.response.statusText, status: err.response.status }
 			});
 		}
+		return;
 	}
 	//if there is a picture
 
-	if (formData.image.size > 200000) {
+	if (formData.image.size > 150000) {
 		dispatch(setAlert('File is too large', 'danger'));
 		return;
 	}
@@ -152,6 +162,98 @@ export const deletePet = (id) => async (dispatch) => {
 		dispatch({
 			type: PET_PROFILE_ERROR,
 			payload: { msg: err.response.statusText, status: err.response.status }
+		});
+	}
+};
+
+//Add like
+
+export const addLike = (petId) => async (dispatch) => {
+	try {
+		const res = await axios.put(`/api/pets/like/${petId}`);
+		dispatch({
+			type: UPDATE_LIKES,
+			payload: { id: petId, likes: res.data }
+		});
+	} catch (err) {
+		dispatch({
+			type: PET_PROFILE_ERROR,
+			payload: { msg: err.response.statusText, status: err.response.status }
+		});
+	}
+};
+
+//REMOVE like
+
+export const removeLike = (petId) => async (dispatch) => {
+	try {
+		const res = await axios.put(`/api/pets/unlike/${petId}`);
+		dispatch({
+			type: UPDATE_LIKES,
+			payload: { id: petId, likes: res.data }
+		});
+	} catch (err) {
+		dispatch({
+			type: PET_PROFILE_ERROR,
+			payload: { msg: err.response.statusText, status: err.response.status }
+		});
+	}
+};
+
+//Get Pets Profile
+
+export const getPetProfile = (petId) => async (dispatch) => {
+	try {
+		const res = await axios.get(`/api/pets/${petId}`);
+		const userId = res.data.user;
+		dispatch({
+			type: GET_PET,
+			payload: res.data
+		});
+		dispatch(getUsersProfileById(userId));
+	} catch (err) {
+		dispatch({
+			type: PET_PROFILE_ERROR,
+			payload: { msg: err.response.statusText, status: err.response.status }
+		});
+	}
+};
+
+//Add comment
+
+export const addComment = (petId, formData) => async (dispatch) => {
+	const config = {
+		headers: {
+			'Content-Type': 'application/json'
+		}
+	};
+	try {
+		const res = await axios.post(`/api/pets/comment/${petId}`, formData, config);
+		dispatch({
+			type: ADD_COMMENT,
+			payload: res.data
+		});
+		dispatch(setAlert('Comment Added', 'success'));
+	} catch (err) {
+		dispatch({
+			type: PET_PROFILE_ERROR
+		});
+	}
+};
+
+//Delete comment
+
+export const deleteComment = (petId, commentId) => async (dispatch) => {
+	try {
+		const res = await axios.delete(`/api/pets/comment/${petId}/${commentId}`);
+		dispatch({
+			type: REMOVE_COMMENT,
+			payload: commentId
+		});
+		dispatch(setAlert('Comment Removed', 'danger'));
+	} catch (err) {
+		dispatch({
+			type: PET_PROFILE_ERROR
 		});
 	}
 };
