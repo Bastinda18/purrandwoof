@@ -82,7 +82,7 @@ const Dashboard = ({
 							<div className='lead text-info my-3'>
 								<p>Found a pet?</p>
 								<ol>
-									<li>Select a location by pressing "Edit Profile" button. </li>
+									<li>Select a location by pressing "Add a Profile" button. </li>
 									<li>
 										Make an account for a pet by pressing "Add a pet" button.
 									</li>
