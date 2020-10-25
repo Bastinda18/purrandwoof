@@ -90,10 +90,10 @@ export const createPet = (formData, history, edit = false) => async (dispatch) =
 
 		try {
 			const fd = new FormData();
-			console.log('image', formData.image);
+
 			fd.append('image', formData.image, formData.image.name);
 
-			const respic = await axios.post(`api/pets/${petID}/picture`, fd);
+			await axios.post(`api/pets/${petID}/picture`, fd);
 		} catch (err) {
 			const errors = err.response.data.msg;
 
@@ -245,7 +245,7 @@ export const addComment = (petId, formData) => async (dispatch) => {
 
 export const deleteComment = (petId, commentId) => async (dispatch) => {
 	try {
-		const res = await axios.delete(`/api/pets/comment/${petId}/${commentId}`);
+		await axios.delete(`/api/pets/comment/${petId}/${commentId}`);
 		dispatch({
 			type: REMOVE_COMMENT,
 			payload: commentId

@@ -72,6 +72,7 @@ const EditProfile = ({
 									name='location'
 									value={location}
 									onChange={(e) => onChange(e)}
+									required
 								/>
 							</div>
 							<p className='form-text text-info mb-2'>Choose you role:</p>
@@ -126,7 +127,7 @@ const EditProfile = ({
 								>
 									Add your social media
 								</button>{' '}
-								<span>  (Optional)</span>
+								<span> (Optional)</span>
 							</div>
 
 							{displaySocialInputs && (

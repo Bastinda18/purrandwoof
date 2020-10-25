@@ -13,7 +13,7 @@ const PetDiscussion = ({ getPetProfile, pet: { pet, loading }, profile: { profil
 		() => {
 			getPetProfile(match.params.id);
 		},
-		[ getPetProfile ]
+		[ getPetProfile, match.params.id ]
 	);
 	return loading || pet === null || profile === null ? (
 		<Spinner />

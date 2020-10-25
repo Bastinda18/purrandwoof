@@ -48,6 +48,7 @@ const CreateProfile = ({ createProfile, history }) => {
 									name='location'
 									value={location}
 									onChange={(e) => onChange(e)}
+									required
 								/>
 							</div>
 							<p className='form-text text-info mb-2'>Choose you role:</p>

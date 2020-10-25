@@ -16,7 +16,7 @@ function CreatePet({ createPet, history }) {
 		image: null
 	});
 
-	const { name, type, age, gender, breed, color, description, image, picURL } = formData;
+	const { name, type, age, gender, breed, color, description, image } = formData;
 
 	const onChange = (e) => {
 		const target = e.target;
@@ -29,7 +29,7 @@ function CreatePet({ createPet, history }) {
 	};
 	const onSubmit = async (e) => {
 		e.preventDefault();
-		console.log(formData);
+
 		createPet(formData, history);
 	};
 	return (
@@ -91,6 +91,7 @@ function CreatePet({ createPet, history }) {
 										value={gender}
 										onChange={(e) => onChange(e)}
 									>
+										<option value='' />
 										<option value='Male'>Male</option>
 										<option value='Female'>Female</option>
 									</select>

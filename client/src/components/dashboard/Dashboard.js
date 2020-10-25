@@ -56,9 +56,15 @@ const Dashboard = ({
 						>
 							{profile === null ? 'Add a Profile' : 'Edit Profile'}
 						</Link>
-						<Link to='/create-pet' className='btn btn-primary text-white my-4 px-4 '>
-							Add a Pet
-						</Link>
+						{profile !== null &&
+						profile.location && (
+							<Link
+								to='/create-pet'
+								className='btn btn-primary text-white my-4 px-4 '
+							>
+								Add a Pet
+							</Link>
+						)}
 
 						<h3 className='text-dark my-1 '>Welcome {user && user.name}</h3>
 
@@ -73,9 +79,15 @@ const Dashboard = ({
 						{myPets.length > 0 ? (
 							<MyPets pets={myPets} />
 						) : (
-							<p className='lead text-info my-3'>
-								Find a pet? Make an account for it by pressing "Add a pet" button.
-							</p>
+							<div className='lead text-info my-3'>
+								<p>Found a pet?</p>
+								<ol>
+									<li>Select a location by pressing "Edit Profile" button. </li>
+									<li>
+										Make an account for a pet by pressing "Add a pet" button.
+									</li>
+								</ol>
+							</div>
 						)}
 						<button
 							onClick={() => deleteAccount()}

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Spinner } from '../layout/Spinner';
 import Image from './Image';
+import petsAge from '../../utils/petsAge';
 import { getPetProfile } from '../../actions/pet';
 
 const PetProfile = ({ getPetProfile, pet: { pet, loading }, profile: { profile }, match }) => {
@@ -11,7 +12,7 @@ const PetProfile = ({ getPetProfile, pet: { pet, loading }, profile: { profile }
 		() => {
 			getPetProfile(match.params.id);
 		},
-		[ getPetProfile ]
+		[ getPetProfile, match.params.id ]
 	);
 
 	return loading || pet === null || profile === null ? (
@@ -31,9 +32,7 @@ const PetProfile = ({ getPetProfile, pet: { pet, loading }, profile: { profile }
 						</div>
 
 						<h3 className='text-dark my-1 text-center'>{pet.name}</h3>
-						<p className='lead text-info text-center my-0'>
-							{pet.age ? pet.age + ' years old' : ''}{' '}
-						</p>
+						<p className='lead text-info text-center my-0'>{petsAge(pet.age)} </p>
 						<p className='lead text-info text-center mt-1 mb-3 finder'>
 							Finder: {profile.user.name}
 						</p>
@@ -54,7 +53,7 @@ const PetProfile = ({ getPetProfile, pet: { pet, loading }, profile: { profile }
 								</tr>
 								<tr>
 									<th scope='row'>Location</th>
-									<td>{profile.location}</td>
+									<td>{profile.location ? profile.location : ''}</td>
 								</tr>
 								<tr>
 									<th scope='row'>Other Details</th>
