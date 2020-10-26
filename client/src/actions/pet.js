@@ -65,7 +65,7 @@ export const createPet = (formData, history, edit = false) => async (dispatch) =
 	}
 	//if there is a picture
 
-	if (formData.image.size > 150000) {
+	if (formData.image.size > 3000000) {
 		dispatch(setAlert('File is too large', 'danger'));
 		return;
 	}

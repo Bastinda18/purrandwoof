@@ -136,7 +136,7 @@ function CreatePet({ createPet, history }) {
 								<small className='text-info'>
 									{' '}
 									Add a picture of your pet. File must be JPG or PNG format and no
-									more than 150Kb.{' '}
+									more than 3Mb.{' '}
 								</small>
 							</p>
 							<div className='custom-file'>
