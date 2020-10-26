@@ -35,8 +35,8 @@ function CreatePet({ createPet, history }) {
 	return (
 		<section className='auth'>
 			<div className='container pt-5'>
-				<div className='row d-flex  align-items-center justify-content-md-center'>
-					<div className='col-md-8 col-lg-6 bg-white rounded shadow '>
+				<div className='row pt-3'>
+					<div className='offset-md-2 offset-lg-3 col-md-8 col-lg-6 bg-white rounded shadow'>
 						<h3 className='text-danger my-4 text-center'>Pet Profile</h3>
 
 						<form onSubmit={(e) => onSubmit(e)}>
