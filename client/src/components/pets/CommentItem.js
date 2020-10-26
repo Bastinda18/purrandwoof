@@ -14,7 +14,7 @@ function CommentItem({
 	return (
 		<div className='row my-1 py-2 px-5'>
 			<div
-				className='col-sm-2 pl-3 py-2 comment-avatar d-flex  align-items-center justify-content-center'
+				className='col-sm-2 pl-3 py-2 comment-avatar d-flex  align-items-center justify-content-sm-center justify-content-start'
 				style={{
 					backgroundColor:
 						!auth.loading && user === auth.user._id
@@ -22,7 +22,7 @@ function CommentItem({
 							: 'rgba(243, 243, 243, 0.6)'
 				}}
 			>
-				<div>
+				<div >
 					<img
 						src={avatar}
 						alt='user avatar'
@@ -30,7 +30,7 @@ function CommentItem({
 						className='d-none d-sm-block'
 						style={{ borderRadius: '50%' }}
 					/>
-					<p className='text-dark text-center p-0 m-0' style={{ fontWeight: '700' }}>
+					<p className='text-dark text-center  p-0 m-0' style={{ fontWeight: '700' }}>
 						{name}
 					</p>
 				</div>

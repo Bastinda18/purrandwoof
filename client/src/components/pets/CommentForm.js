@@ -30,7 +30,7 @@ function CommentForm({ petId, addComment }) {
 				<div className='d-flex flex-row-reverse px-5'>
 					<button className='btn btn-danger text-white  px-5 '>Send</button>
 					<Link to='/all-pets' className='btn btn-dark text-white px-4 mx-2'>
-						Go To All Pets
+						All Pets
 					</Link>
 				</div>
 			</form>
