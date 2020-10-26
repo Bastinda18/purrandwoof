@@ -35,7 +35,7 @@ function CreatePet({ createPet, history }) {
 	return (
 		<section className='auth'>
 			<div className='container pt-5'>
-				<div className='row pt-3'>
+				<div className='row pt-3 d-xl-flex  align-items-xl-center'>
 					<div className='offset-md-2 offset-lg-3 col-md-8 col-lg-6 bg-white rounded shadow'>
 						<h3 className='text-danger my-4 text-center'>Pet Profile</h3>
 
